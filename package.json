@@ -1,0 +1,23 @@
+{
+  "name": "evm-ss58-converter",
+  "version": "1.0.0",
+  "description": "EVM to SS58 address converter for Polkadot ecosystem",
+  "type": "module",
+  "scripts": {
+    "test": "node test-networks.mjs",
+    "test:papi": "node test.js"
+  },
+  "dependencies": {
+    "@polkadot/api": "^14.3.1",
+    "@polkadot/util": "^13.2.3",
+    "@polkadot/util-crypto": "^13.2.3",
+    "polkadot-api": "^1.7.9"
+  },
+  "keywords": [
+    "polkadot",
+    "ethereum",
+    "ss58",
+    "evm",
+    "address-converter"
+  ]
+}
