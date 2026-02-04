@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVM to SS58 Address Converter</title>
+    <link rel="icon" type="image/png" href="polkadot.png">
+    <!-- Polkadot Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F5F5F4;
+            min-height: 100vh;
+            padding: 60px 20px;
+            color: #1C1917;
+            overflow-y: hidden;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: #F5F5F4;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            color: #1C1917;
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-family: 'DM Sans', sans-serif;
+            color: #57534E;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+
+        .network-selector {
+            background: #FAFAFA;
+            border: 1px solid #E5E5E5;
+            border-radius: 4px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .network-label {
+            display: block;
+            color: #000000;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            padding-right: 38px;
+            border: 1px solid #E7E5E4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            background: #FFFFFF;
+            color: #1C1917;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 400;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1.5 1.5L7 7.5L12.5 1.5' stroke='%2357534E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        select:hover {
+            border-color: #D6D3D1;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #FF2867;
+            box-shadow: 0 0 0 3px rgba(255, 40, 103, 0.1);
+        }
+
+        .converter {
+            background: #FAFAFA;
+            border: 1px solid #E5E5E5;
+            border-radius: 4px;
+            padding: 28px 24px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            margin: 0;
+            padding: 12px 14px;
+            border: 1px solid #E7E5E4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            color: #1C1917;
+            background: #FAFAF9;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+        }
+
+        .copy-button {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            margin: 0;
+            background: #FFFFFF;
+            border: 1px solid #E7E5E4;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .copy-button:hover {
+            background: #FF2867;
+            border-color: #FF2867;
+        }
+
+        .copy-button:hover svg {
+            stroke: #FFFFFF;
+        }
+
+        .copy-button:active {
+            transform: scale(0.96);
+        }
+
+        .copy-button.copied {
+            background: #FF2867;
+            border-color: #FF2867;
+        }
+
+        .copy-button.copied svg {
+            stroke: #FFFFFF;
+        }
+
+        .copy-button svg {
+            width: 16px;
+            height: 16px;
+            stroke: #1C1917;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:hover {
+            border-color: #D6D3D1;
+            background: #FFFFFF;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #FF2867;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(255, 40, 103, 0.1);
+        }
+
+        input[type="text"].error {
+            border-color: #DC2626;
+        }
+
+        input[type="text"]::placeholder {
+            color: #A8A29E;
+        }
+
+        .swap-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .swap-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FF2867;
+            color: #FFFFFF;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            box-shadow: 0 2px 8px rgba(255, 40, 103, 0.2);
+        }
+
+        .swap-icon:hover {
+            background: #E61455;
+            transform: rotate(180deg) scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 40, 103, 0.3);
+        }
+
+        .swap-icon:active {
+            transform: rotate(180deg) scale(0.95);
+        }
+
+        .error-message {
+            background: #FEE2E2;
+            border-left: 3px solid #DC2626;
+            color: #DC2626;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 13px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .disclaimer {
+            background: #FFF5F5;
+            border-left: 4px solid #FF2867;
+            border-top: 1px solid #FFC9D9;
+            border-right: 1px solid #FFC9D9;
+            border-bottom: 1px solid #FFC9D9;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-top: 32px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #57534E;
+        }
+
+        .disclaimer-title {
+            color: #FF2867;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer a {
+            color: #1C1917;
+            text-decoration: none;
+            border-bottom: 1px solid #D6D3D1;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .disclaimer a:hover {
+            color: #FF2867;
+            border-bottom-color: #FF2867;
+        }
+
+        .disclaimer code {
+            background: #F5F5F4;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: #1C1917;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid #E7E5E4;
+        }
+
+        .footer-text {
+            color: #78716C;
+            font-size: 13px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-logo {
+            width: 20px;
+            height: 20px;
+            opacity: 0.75;
+        }
+
+        .footer a {
+            color: #1C1917;
+            text-decoration: none;
+            border-bottom: 1px solid #D6D3D1;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #FF2867;
+            border-bottom-color: #FF2867;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 16px;
+            }
+
+            .container {
+                padding: 28px 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+                margin-bottom: 36px;
+            }
+
+            .converter {
+                padding: 24px 20px;
+            }
+
+            .network-selector {
+                padding: 18px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EVM to SS58 Converter</h1>
+        <p class="subtitle">Convert addresses between Ethereum and Polkadot networks</p>
+
+        <div class="network-selector">
+            <label class="network-label" for="network">Network</label>
+            <select id="network">
+                <option value="0">Polkadot Hub</option>
+                <option value="2">Kusama Hub</option>
+                <option value="42">Polkadot Hub Testnet (Paseo)</option>
+            </select>
+        </div>
+
+        <div class="converter">
+            <div class="input-section">
+                <label class="input-label" for="ethAddress">Ethereum Address</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="ethAddress" 
+                        placeholder="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"
+                        spellcheck="false"
+                    >
+                    <button class="copy-button" onclick="copyToClipboard('ethAddress')" title="Copy to clipboard">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="ethError" class="error-message"></div>
+            </div>
+
+            <div class="swap-button">
+                <div class="swap-icon" onclick="performSwap()" title="Swap and convert">⇄</div>
+            </div>
+
+            <div class="input-section">
+                <label class="input-label" for="ss58Address">SS58 Address</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="ss58Address" 
+                        placeholder="5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM"
+                        spellcheck="false"
+                    >
+                    <button class="copy-button" onclick="copyToClipboard('ss58Address')" title="Copy to clipboard">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="ss58Error" class="error-message"></div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <div class="disclaimer-title">Important Notice</div>
+            <p>
+                This tool converts <strong>address formats only</strong> — it does <strong>not derive or transfer private keys</strong>. 
+                You can only control funds at a converted address if you possess the original private key.
+                <a href="https://docs.polkadot.com/smart-contracts/for-eth-devs/accounts/" target="_blank">Learn more →</a>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <img class="footer-logo" src="polkadot.png" alt="Polkadot" style="filter: brightness(0) saturate(100%);">
+
+                <span>Polkadot 2026 • 
+                <a href="https://github.com/polkadot-developers" target="_blank">Reference</a></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Import Polkadot.js libraries from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@polkadot/util@latest/bundle-polkadot-util.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@latest/bundle-polkadot-util-crypto.js"></script>
+    <script src="converter.js"></script>
+</body>
+</html>
