@@ -241,6 +241,28 @@
             transform: rotate(180deg) scale(0.95);
         }
 
+        .ss58-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #57534E;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .ss58-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #FF2867;
+            cursor: pointer;
+        }
+
+        .ss58-checkbox-label span {
+            line-height: 1.4;
+        }
+
         .error-message {
             background: #FEE2E2;
             border-left: 3px solid #DC2626;
@@ -421,6 +443,10 @@
                         </svg>
                     </button>
                 </div>
+                <label class="ss58-checkbox-label">
+                    <input type="checkbox" id="ss58MappedCheckbox" class="ss58-checkbox">
+                    <span>I have mapped this account previously</span>
+                </label>
                 <div id="ss58Error" class="error-message"></div>
             </div>
         </div>
@@ -447,6 +473,6 @@
     <!-- Import Polkadot.js libraries from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@polkadot/util@latest/bundle-polkadot-util.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@polkadot/util-crypto@latest/bundle-polkadot-util-crypto.js"></script>
-    <script src="converter.js"></script>
+    <script src="converter.js?v=2"></script>
 </body>
 </html>

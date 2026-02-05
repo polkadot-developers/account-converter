@@ -178,12 +178,13 @@
     }
 
     /**
-     * Auto-convert SS58 to ETH on input
+     * Auto-convert SS58 to ETH on input (only if "mapped account" checkbox is checked)
      */
     function autoConvertSS58ToEth() {
         const ethInput = document.getElementById('ethAddress');
         const ss58Input = document.getElementById('ss58Address');
         const ss58Error = document.getElementById('ss58Error');
+        const mappedCheckbox = document.getElementById('ss58MappedCheckbox');
 
         // Clear previous errors
         ss58Error.classList.remove('show');
@@ -193,6 +194,12 @@
         
         if (!ss58Address) {
             ethInput.value = '';
+            return;
+        }
+
+        if (!mappedCheckbox || !mappedCheckbox.checked) {
+            ethInput.value = '';
+            showError(ss58Error, ss58Input, 'Check the box to confirm you have mapped this account before converting SS58 → ETH.');
             return;
         }
 
@@ -233,6 +240,11 @@
                 showError(ethError, ethInput, error.message);
             }
         } else if (ss58Value) {
+            const mappedCheckbox = document.getElementById('ss58MappedCheckbox');
+            if (!mappedCheckbox.checked) {
+                showError(ss58Error, ss58Input, 'Check the box to confirm you have mapped this account before converting SS58 → ETH.');
+                return;
+            }
             try {
                 const ethAddress = ss58ToEth(ss58Value);
                 ethInput.value = ethAddress;
@@ -333,7 +345,7 @@
             }, 50);
         });
         
-        // SS58 input: auto-convert with debounce
+        // SS58 input: only allow conversion when "mapped" checkbox is checked
         ss58Input.addEventListener('input', () => {
             clearError(ss58Error, ss58Input);
             
@@ -342,23 +354,38 @@
                 ethInput.value = '';
                 return;
             }
+
+            const mappedCheckbox = document.getElementById('ss58MappedCheckbox');
+            if (!mappedCheckbox || !mappedCheckbox.checked) {
+                // Block conversion: clear ETH immediately and show error
+                ethInput.value = '';
+                if (value.length >= 40) {
+                    showError(ss58Error, ss58Input, 'Check the box to confirm you have mapped this account before converting SS58 → ETH.');
+                }
+                return;
+            }
             
-            // Debounce: wait 500ms after user stops typing
+            // Checkbox is checked: debounce then convert
             clearTimeout(ss58ConvertTimeout);
             ss58ConvertTimeout = setTimeout(() => {
-                if (value.length >= 40) { // Only convert if looks like a complete address
+                if (value.length >= 40) {
                     autoConvertSS58ToEth();
                 }
             }, 500);
         });
         
-        // SS58 input: instant convert on paste
+        // SS58 paste: same logic runs in input handler after paste inserts text
         ss58Input.addEventListener('paste', () => {
+            // Let the input event handle it; just ensure we run one more check after paste is applied
             setTimeout(() => {
-                if (ss58Input.value.trim()) {
-                    autoConvertSS58ToEth();
+                const value = ss58Input.value.trim();
+                if (!value || value.length < 40) return;
+                const mappedCheckbox = document.getElementById('ss58MappedCheckbox');
+                if (!mappedCheckbox || !mappedCheckbox.checked) {
+                    ethInput.value = '';
+                    showError(ss58Error, ss58Input, 'Check the box to confirm you have mapped this account before converting SS58 → ETH.');
                 }
-            }, 50);
+            }, 0);
         });
         
         // Network change: re-convert if ETH address exists
@@ -380,6 +407,17 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 autoConvertSS58ToEth();
+            }
+        });
+
+        // When user checks "mapped account", convert SS58 → ETH if SS58 field has a value
+        const mappedCheckbox = document.getElementById('ss58MappedCheckbox');
+        mappedCheckbox.addEventListener('change', () => {
+            if (mappedCheckbox.checked && ss58Input.value.trim().length >= 40) {
+                autoConvertSS58ToEth();
+            } else if (!mappedCheckbox.checked && ss58Input.value.trim()) {
+                ethInput.value = '';
+                showError(ss58Error, ss58Input, 'Check the box to confirm you have mapped this account before converting SS58 → ETH.');
             }
         });
     });
