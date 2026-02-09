@@ -38,41 +38,43 @@
             color: #1C1917;
             font-size: 42px;
             font-weight: 400;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
             text-align: center;
             letter-spacing: -0.02em;
+            line-height: 1.15;
         }
 
         .subtitle {
             font-family: 'DM Sans', sans-serif;
             color: #57534E;
-            font-size: 16px;
+            font-size: 13px;
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 12px;
             font-weight: 400;
+            line-height: 1.35;
         }
 
         .network-selector {
             background: #FAFAFA;
             border: 1px solid #E5E5E5;
             border-radius: 4px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
         }
 
         .network-label {
             display: block;
             color: #000000;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
         }
 
         select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 6px 12px;
             padding-right: 38px;
             border: 1px solid #E7E5E4;
             border-radius: 6px;
@@ -105,7 +107,7 @@
             background: #FAFAFA;
             border: 1px solid #E5E5E5;
             border-radius: 4px;
-            padding: 28px 24px;
+            padding: 18px 20px;
         }
 
         .input-section {
@@ -143,6 +145,7 @@
         }
 
         .copy-button {
+            position: relative;
             flex-shrink: 0;
             width: 44px;
             height: 44px;
@@ -187,6 +190,55 @@
             transition: all 0.2s ease;
         }
 
+        .copy-button .copy-icon {
+            display: block;
+        }
+
+        .copy-button .check-icon {
+            display: none;
+        }
+
+        .copy-button.copied .copy-icon {
+            display: none;
+        }
+
+        .copy-button.copied .check-icon {
+            display: block;
+        }
+
+        /* Tooltip above the button */
+        .copy-button .copy-feedback {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            padding: 6px 12px;
+            background: #FF2867;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            border-radius: 8px;
+            display: none;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(255, 40, 103, 0.35);
+        }
+
+        .copy-button .copy-feedback::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border: 6px solid transparent;
+            border-top-color: #FF2867;
+        }
+
+        .copy-button.copied .copy-feedback {
+            display: block;
+        }
+
         input[type="text"]:hover {
             border-color: #D6D3D1;
             background: #FFFFFF;
@@ -205,40 +257,6 @@
 
         input[type="text"]::placeholder {
             color: #A8A29E;
-        }
-
-        .swap-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 24px 0;
-        }
-
-        .swap-icon {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #FF2867;
-            color: #FFFFFF;
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-            box-shadow: 0 2px 8px rgba(255, 40, 103, 0.2);
-        }
-
-        .swap-icon:hover {
-            background: #E61455;
-            transform: rotate(180deg) scale(1.05);
-            box-shadow: 0 4px 12px rgba(255, 40, 103, 0.3);
-        }
-
-        .swap-icon:active {
-            transform: rotate(180deg) scale(0.95);
         }
 
         .ss58-checkbox-label {
@@ -284,21 +302,21 @@
             border-top: 1px solid #FFC9D9;
             border-right: 1px solid #FFC9D9;
             border-bottom: 1px solid #FFC9D9;
-            border-radius: 8px;
-            padding: 18px 22px;
-            margin-top: 32px;
-            font-size: 14px;
-            line-height: 1.6;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-top: 24px;
+            font-size: 13px;
+            line-height: 1.45;
             color: #57534E;
         }
 
-        .disclaimer-title {
+        .disclaimer .disclaimer-title {
             color: #FF2867;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin-bottom: 10px;
+            margin-right: 6px;
         }
 
         .disclaimer a {
@@ -373,16 +391,16 @@
             }
 
             .subtitle {
-                font-size: 15px;
-                margin-bottom: 36px;
+                font-size: 13px;
+                margin-bottom: 10px;
             }
 
             .converter {
-                padding: 24px 20px;
+                padding: 16px 18px;
             }
 
             .network-selector {
-                padding: 18px 20px;
+                padding: 10px 14px;
             }
         }
     </style>
@@ -413,18 +431,18 @@
                         placeholder="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"
                         spellcheck="false"
                     >
-                    <button class="copy-button" onclick="copyToClipboard('ethAddress')" title="Copy to clipboard">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button type="button" class="copy-button" onclick="copyToClipboard('ethAddress', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
+                        <svg class="copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
+                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="copy-feedback" aria-live="polite">Copied!</span>
                     </button>
                 </div>
                 <div id="ethError" class="error-message"></div>
-            </div>
-
-            <div class="swap-button">
-                <div class="swap-icon" onclick="performSwap()" title="Swap and convert">⇄</div>
             </div>
 
             <div class="input-section">
@@ -436,11 +454,15 @@
                         placeholder="5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM"
                         spellcheck="false"
                     >
-                    <button class="copy-button" onclick="copyToClipboard('ss58Address')" title="Copy to clipboard">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button type="button" class="copy-button" onclick="copyToClipboard('ss58Address', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
+                        <svg class="copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
+                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="copy-feedback" aria-live="polite">Copied!</span>
                     </button>
                 </div>
                 <label class="ss58-checkbox-label">
@@ -452,12 +474,9 @@
         </div>
 
         <div class="disclaimer">
-            <div class="disclaimer-title">Important Notice</div>
-            <p>
-                This tool converts <strong>address formats only</strong> — it does <strong>not derive or transfer private keys</strong>. 
-                You can only control funds at a converted address if you possess the original private key.
-                <a href="https://docs.polkadot.com/smart-contracts/for-eth-devs/accounts/" target="_blank">Learn more →</a>
-            </p>
+            <span class="disclaimer-title">Important:<br /></span>
+            This tool converts <strong>address formats only</strong> — it does <strong>not derive or transfer private keys</strong>. You can only control funds if you have the original private key.
+            <a href="https://docs.polkadot.com/smart-contracts/for-eth-devs/accounts/" target="_blank"><br />Learn more →</a>
         </div>
 
         <!-- <div class="footer">

@@ -256,36 +256,50 @@
 
     /**
      * Copy address to clipboard with visual feedback
+     * @param {string} inputId - ID of the input element
+     * @param {HTMLButtonElement} buttonElement - The copy button (passed as `this` from onclick)
      */
-    window.copyToClipboard = async function(inputId) {
+    window.copyToClipboard = async function(inputId, buttonElement) {
         const input = document.getElementById(inputId);
-        const button = event.currentTarget;
+        const button = buttonElement || (input && input.closest('.input-wrapper') && input.closest('.input-wrapper').querySelector('.copy-button'));
         
-        if (!input.value.trim()) {
+        if (!input || !input.value.trim() || !button) {
             return;
         }
         
         try {
-            await navigator.clipboard.writeText(input.value);
+            await navigator.clipboard.writeText(input.value.trim());
             
-            // Visual feedback
             button.classList.add('copied');
+            button.setAttribute('title', 'Copied!');
+            if (button.getAttribute('aria-label')) {
+                button.setAttribute('aria-label', 'Copied!');
+            }
             
-            // Change icon to checkmark temporarily
-            const originalHTML = button.innerHTML;
-            button.innerHTML = `
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 6L9 17L4 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            `;
-            
-            // Reset after 1.5 seconds
             setTimeout(() => {
                 button.classList.remove('copied');
-                button.innerHTML = originalHTML;
-            }, 1500);
+                button.setAttribute('title', 'Copy to clipboard');
+                if (button.getAttribute('aria-label')) {
+                    button.setAttribute('aria-label', 'Copy to clipboard');
+                }
+            }, 2000);
         } catch (err) {
             console.error('Failed to copy:', err);
+            // Fallback for older browsers or non-HTTPS: select and execCommand
+            try {
+                input.select();
+                input.setSelectionRange(0, 99999);
+                if (document.execCommand('copy')) {
+                    button.classList.add('copied');
+                    button.setAttribute('title', 'Copied!');
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.setAttribute('title', 'Copy to clipboard');
+                    }, 2000);
+                }
+            } catch (e) {
+                console.error('Fallback copy failed:', e);
+            }
         }
     };
 
