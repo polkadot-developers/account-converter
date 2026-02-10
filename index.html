@@ -369,78 +369,80 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h2>
+<body class="converter-page">
+    <div class="container converter-container">
+        <h2 class="converter-heading">
             Address Format Converter (EVM ↔ SS58)
         </h2>
-        <p class="subtitle">Convert addresses between Ethereum and Polkadot networks</p>
+        <p class="subtitle converter-subtitle">Convert addresses between Ethereum and Polkadot networks</p>
 
-        <div class="network-selector">
-            <label class="network-label" for="network">Network</label>
-            <select id="network">
-                <option value="0">Polkadot Hub</option>
-                <option value="2">Kusama Hub</option>
-                <option value="0">Polkadot Hub Testnet (Paseo)</option>
+        <div class="network-selector converter-network-selector">
+            <label class="network-label converter-network-label" for="network">Network</label>
+            <select id="network" class="converter-network-select">
+                <option value="0" class="converter-network-option">Polkadot Hub</option>
+                <option value="2" class="converter-network-option">Kusama Hub</option>
+                <option value="0" class="converter-network-option">Polkadot Hub Testnet (Paseo)</option>
             </select>
         </div>
 
-        <div class="converter">
-            <div class="input-section">
-                <label class="input-label" for="ethAddress">Ethereum Address</label>
-                <div class="input-wrapper">
+        <div class="converter converter-box">
+            <div class="input-section converter-input-section">
+                <label class="input-label converter-input-label" for="ethAddress">Ethereum Address</label>
+                <div class="input-wrapper converter-input-wrapper">
                     <input 
                         type="text" 
                         id="ethAddress" 
+                        class="converter-input"
                         placeholder="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"
                         spellcheck="false"
                     >
-                    <button type="button" class="copy-button" onclick="copyToClipboard('ethAddress', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
-                        <svg class="copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button type="button" class="copy-button converter-copy-button" onclick="copyToClipboard('ethAddress', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
+                        <svg class="copy-icon converter-copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="check-icon converter-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M20 6L9 17L4 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <span class="copy-feedback" aria-live="polite">Copied!</span>
+                        <span class="copy-feedback converter-copy-feedback" aria-live="polite">Copied!</span>
                     </button>
                 </div>
-                <div id="ethError" class="error-message"></div>
+                <div id="ethError" class="error-message converter-error"></div>
             </div>
 
-            <div class="input-section">
-                <label class="input-label" for="ss58Address">SS58 Address</label>
-                <div class="input-wrapper">
+            <div class="input-section converter-input-section">
+                <label class="input-label converter-input-label" for="ss58Address">SS58 Address</label>
+                <div class="input-wrapper converter-input-wrapper">
                     <input 
                         type="text" 
                         id="ss58Address" 
+                        class="converter-input"
                         placeholder="5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM"
                         spellcheck="false"
                     >
-                    <button type="button" class="copy-button" onclick="copyToClipboard('ss58Address', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
-                        <svg class="copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button type="button" class="copy-button converter-copy-button" onclick="copyToClipboard('ss58Address', this)" title="Copy to clipboard" aria-label="Copy to clipboard">
+                        <svg class="copy-icon converter-copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <svg class="check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="check-icon converter-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M20 6L9 17L4 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <span class="copy-feedback" aria-live="polite">Copied!</span>
+                        <span class="copy-feedback converter-copy-feedback" aria-live="polite">Copied!</span>
                     </button>
                 </div>
-                <label class="ss58-checkbox-label">
-                    <input type="checkbox" id="ss58MappedCheckbox" class="ss58-checkbox">
-                    <span>I have mapped this account previously</span>
+                <label class="ss58-checkbox-label converter-ss58-checkbox-label">
+                    <input type="checkbox" id="ss58MappedCheckbox" class="ss58-checkbox converter-ss58-checkbox">
+                    <span class="converter-ss58-checkbox-text">I have mapped this account previously</span>
                 </label>
-                <div id="ss58Error" class="error-message"></div>
+                <div id="ss58Error" class="error-message converter-error"></div>
             </div>
         </div>
 
-        <div class="disclaimer">
-            <span class="disclaimer-title">Important:<br /></span>
-            This tool converts <strong>address formats only</strong> — it does <strong>not derive or transfer private keys</strong>. You can only control funds if you have the original private key.
-            <a href="https://docs.polkadot.com/smart-contracts/for-eth-devs/accounts/" target="_blank"><br />Learn more →</a>
+        <div class="disclaimer converter-disclaimer">
+            <span class="disclaimer-title converter-disclaimer-title">Important:<br /></span>
+            This tool converts <strong class="converter-text-bold">address formats only</strong> — it does <strong class="converter-text-bold">not derive or transfer private keys</strong>. You can only control funds if you have the original private key.
+            <a href="https://docs.polkadot.com/smart-contracts/for-eth-devs/accounts/" target="_blank" class="converter-disclaimer-link"><br />Learn more →</a>
         </div>
 
     </div>
